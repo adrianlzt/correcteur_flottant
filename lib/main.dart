@@ -12,7 +12,10 @@ import 'widgets/correction_overlay.dart';
 void overlayMain() {
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: CorrectionOverlay(),
+    home: Scaffold(
+      backgroundColor: Colors.transparent,
+      body: CorrectionOverlay(),
+    ),
   ));
 }
 
