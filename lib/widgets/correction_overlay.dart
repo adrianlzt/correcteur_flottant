@@ -15,8 +15,6 @@ class CorrectionOverlay extends StatefulWidget {
 class _CorrectionOverlayState extends State<CorrectionOverlay> {
   final LlmService _llmService = LlmService();
   Future<LlmResponse>? _correctionFuture;
-  Timer? _timer;
-  bool _isClosing = false;
 
   @override
   void initState() {
@@ -29,25 +27,11 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
         });
       }
     });
-    _startDragListener();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
     super.dispose();
-  }
-
-  void _startDragListener() {
-    _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) async {
-      if (_isClosing) return;
-      final position = await FlutterOverlayWindow.getOverlayPosition();
-      // Close if dragged near the top of the screen (e.g., y < 40)
-      if (position != null && position.y < 40) {
-        _isClosing = true;
-        await FlutterOverlayWindow.closeOverlay();
-      }
-    });
   }
 
   @override
@@ -81,7 +65,6 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
             ),
           ],
         ),
-      ),
     );
   }
 
@@ -121,10 +104,7 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
   }
 
   Widget _buildSuccessView(LlmResponse response) {
-    return Listener(
-      onPointerDown: (_) => FlutterOverlayWindow.updateFlag(OverlayFlag.defaultFlag),
-      onPointerUp: (_) => FlutterOverlayWindow.updateFlag(OverlayFlag.focusPointer),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
