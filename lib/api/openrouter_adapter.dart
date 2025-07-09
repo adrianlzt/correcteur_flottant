@@ -41,6 +41,7 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
       ],
       'temperature': 0.2,
       'max_tokens': 2048,
+      'response_format': {'type': 'json_object'},
     });
 
     try {
