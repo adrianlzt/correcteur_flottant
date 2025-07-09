@@ -48,14 +48,17 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
+        print('OpenRouter full response body: ${response.body}');
         final responseBody = jsonDecode(response.body);
         final content = responseBody['choices'][0]['message']['content'];
+        print('OpenRouter content to be parsed: $content');
         final llmJson = jsonDecode(content);
         return LlmResponse.fromJson(llmJson);
       } else {
         throw Exception('Failed to get correction from OpenRouter. Status code: ${response.statusCode}\nBody: ${response.body}');
       }
     } catch (e) {
+      print('Error in OpenRouter adapter: $e');
       throw Exception('Error communicating with OpenRouter: $e');
     }
   }
