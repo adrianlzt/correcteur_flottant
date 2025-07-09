@@ -53,9 +53,12 @@ class _HomePageState extends State<HomePage> {
 
     // For sharing text coming from outside the app while it is in the memory
     _intentDataStreamSubscription =
-        ReceiveSharingIntent.instance.getMediaStream().listen((List<SharedMediaFile> value) {
+        ReceiveSharingIntent.instance.getMediaStream().listen((List<SharedMediaFile> value) async {
       if (value.isNotEmpty && value.first.type == SharedMediaType.text) {
-        _handleText(value.first.path);
+        final bool success = await _handleText(value.first.path);
+        if (success) {
+          SystemNavigator.pop();
+        }
       }
     }, onError: (err) {
       print("getMediaStream error: ");
