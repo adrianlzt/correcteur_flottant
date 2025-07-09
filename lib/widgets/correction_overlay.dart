@@ -66,7 +66,7 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
               ),
             ],
           ),
-          constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
+          constraints: const BoxConstraints(maxHeight: 600),
           child: Stack(
             children: [
               Padding(
