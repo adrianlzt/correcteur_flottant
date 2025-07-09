@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -20,11 +21,58 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  static const platform = MethodChannel('com.example.correcteur_flottant/intent');
+  String? _launchAction;
+  bool _isChecking = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getLaunchAction();
+  }
+
+  Future<void> _getLaunchAction() async {
+    String? action;
+    // Only check on Android
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      try {
+        action = await platform.invokeMethod('getLaunchAction');
+      } on PlatformException catch (e) {
+        print("Failed to get launch action: '${e.message}'.");
+      }
+    }
+    if (mounted) {
+      setState(() {
+        _launchAction = action;
+        _isChecking = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isChecking) {
+      return const MaterialApp(
+        home: Scaffold(backgroundColor: Colors.transparent),
+        debugShowCheckedModeBanner: false,
+      );
+    }
+
+    if (_launchAction == 'android.intent.action.PROCESS_TEXT') {
+      return const MaterialApp(
+        home: ProcessTextScreen(),
+        debugShowCheckedModeBanner: false,
+      );
+    }
+
     return MaterialApp(
       title: 'Correcteur Flottant',
       theme: ThemeData(
@@ -37,14 +85,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ProcessTextScreen extends StatefulWidget {
+  const ProcessTextScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ProcessTextScreen> createState() => _ProcessTextScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ProcessTextScreenState extends State<ProcessTextScreen> {
   late StreamSubscription _intentDataStreamSubscription;
 
   @override
@@ -88,11 +136,7 @@ class _HomePageState extends State<HomePage> {
     if (isPermissionGranted != true) {
       final bool? granted = await FlutterOverlayWindow.requestPermission();
       if (granted != true) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Overlay permission is required to show corrections.')),
-          );
-        }
+        print('Overlay permission is required to show corrections.');
         return false;
       }
     }
@@ -107,6 +151,21 @@ class _HomePageState extends State<HomePage> {
     return true;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    // This screen should be invisible.
+    return const Scaffold(backgroundColor: Colors.transparent);
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
