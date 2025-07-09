@@ -124,9 +124,10 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
   }
 
   Widget _buildSuccessView(LlmResponse response) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         const Text('Correction', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         const Text('Corrected Text:', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -153,11 +154,12 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
         const SizedBox(height: 16),
         const Text('Explanation of Errors:', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        Expanded(
-          child: response.errors.isEmpty
-              ? const Center(child: Text('No errors found.'))
-              : ListView.builder(
-                  itemCount: response.errors.length,
+        response.errors.isEmpty
+            ? const Center(child: Text('No errors found.'))
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: response.errors.length,
                   itemBuilder: (context, index) {
                     final error = response.errors[index];
                     return Card(
@@ -179,8 +181,8 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
                     );
                   },
                 ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
