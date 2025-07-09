@@ -65,6 +65,7 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
             ),
           ],
         ),
+      ),
     );
   }
 
@@ -169,7 +170,6 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
                   ),
           ],
         ),
-      ),
     );
   }
 }
