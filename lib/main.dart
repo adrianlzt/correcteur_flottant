@@ -135,6 +135,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
       width: 350,
       alignment: OverlayAlignment.center,
       flag: OverlayFlag.focusPointer,
+      enableDrag: true,
     );
     await FlutterOverlayWindow.shareData(text);
     return true;

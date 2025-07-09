@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
@@ -14,6 +15,8 @@ class CorrectionOverlay extends StatefulWidget {
 class _CorrectionOverlayState extends State<CorrectionOverlay> {
   final LlmService _llmService = LlmService();
   Future<LlmResponse>? _correctionFuture;
+  Timer? _timer;
+  bool _isClosing = false;
 
   @override
   void initState() {
@@ -24,6 +27,25 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
         setState(() {
           _correctionFuture = _llmService.getCorrection(data);
         });
+      }
+    });
+    _startDragListener();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startDragListener() {
+    _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) async {
+      if (_isClosing) return;
+      final position = await FlutterOverlayWindow.getOverlayPosition();
+      // Close if dragged near the top of the screen (e.g., y < 40)
+      if (position != null && position.y < 40) {
+        _isClosing = true;
+        await FlutterOverlayWindow.closeOverlay();
       }
     });
   }
