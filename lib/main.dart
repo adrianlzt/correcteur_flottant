@@ -132,7 +132,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
 
     await FlutterOverlayWindow.showOverlay(
       height: 600,
-      width: FlutterOverlayWindow.matchParent,
+      width: -1, // FlutterOverlayWindow.matchParent
       alignment: OverlayAlignment.center,
       flag: OverlayFlag.focusPointer,
       enableDrag: true,
