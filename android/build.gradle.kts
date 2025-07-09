@@ -24,6 +24,13 @@ subprojects {
     }
 }
 
+subprojects {
+    project.tasks.withType(org.gradle.api.tasks.compile.JavaCompile::class).configureEach {
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }

@@ -18,11 +18,6 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
     defaultConfig {
         applicationId = "com.example.correcteur_flottant"
         minSdk = flutter.minSdkVersion
