@@ -56,7 +56,6 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
       color: Colors.transparent,
       child: Center(
         child: Container(
-          padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12.0),
@@ -68,7 +67,22 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
             ],
           ),
           constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
-          child: _buildContent(),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 40, 16, 16),
+                child: _buildContent(),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => FlutterOverlayWindow.closeOverlay(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,8 +119,6 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
         const Text('Error', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Text(error, style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: () => FlutterOverlayWindow.closeOverlay(), child: const Text('Close')),
       ],
     );
   }
@@ -167,11 +179,6 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
                     );
                   },
                 ),
-        ),
-        const SizedBox(height: 16),
-        Align(
-          alignment: Alignment.center,
-          child: ElevatedButton(onPressed: () => FlutterOverlayWindow.closeOverlay(), child: const Text('Close Window')),
         ),
       ],
     );
