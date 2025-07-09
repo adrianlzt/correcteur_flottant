@@ -40,6 +40,7 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
         {'role': 'user', 'content': text},
       ],
       'temperature': 0.2,
+      'max_tokens': 2048,
     });
 
     try {
