@@ -8,6 +8,7 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
   You are an expert French language tutor. Your task is to analyze the user's French text. You MUST respond with a valid JSON object and nothing else.
 
   The JSON object must have this exact structure:
+  ```json
   {
     "correctedText": "The fully corrected, natural-sounding French text.",
     "errors": [
@@ -19,6 +20,7 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
       }
     ]
   }
+  ```
 
   - If the user's text is perfect and has no errors, return the original text in "correctedText" and an empty array for "errors".
   - Do not include any text, notes, or apologies outside of the JSON object.
@@ -41,7 +43,6 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
       ],
       'temperature': 0.2,
       'max_tokens': 2048,
-      'response_format': {'type': 'json_object'},
     });
 
     try {
