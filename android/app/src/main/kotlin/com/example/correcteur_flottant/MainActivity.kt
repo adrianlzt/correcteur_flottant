@@ -21,7 +21,14 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
             call, result ->
             if (call.method == "getLaunchAction") {
-                result.success(intent.action)
+                val action = intent.action
+                val data = if (action == Intent.ACTION_PROCESS_TEXT) {
+                    intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
+                } else {
+                    null
+                }
+                val intentData = mapOf("action" to action, "data" to data)
+                result.success(intentData)
             } else {
                 result.notImplemented()
             }

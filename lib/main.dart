@@ -31,6 +31,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   static const platform = MethodChannel('com.example.correcteur_flottant/intent');
   String? _launchAction;
+  String? _initialText;
   bool _isChecking = true;
 
   @override
@@ -40,18 +41,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _getLaunchAction() async {
-    String? action;
+    Map<dynamic, dynamic>? intentData;
     // Only check on Android
     if (defaultTargetPlatform == TargetPlatform.android) {
       try {
-        action = await platform.invokeMethod('getLaunchAction');
+        intentData = await platform.invokeMethod('getLaunchAction');
       } on PlatformException catch (e) {
         print("Failed to get launch action: '${e.message}'.");
       }
     }
     if (mounted) {
       setState(() {
-        _launchAction = action;
+        _launchAction = intentData?['action'];
+        _initialText = intentData?['data'];
         _isChecking = false;
       });
     }
@@ -60,15 +62,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     if (_isChecking) {
-      return const MaterialApp(
-        home: Scaffold(backgroundColor: Colors.transparent),
+      return MaterialApp(
+        home: Container(color: Colors.transparent),
         debugShowCheckedModeBanner: false,
       );
     }
 
     if (_launchAction == 'android.intent.action.PROCESS_TEXT') {
-      return const MaterialApp(
-        home: ProcessTextScreen(),
+      return MaterialApp(
+        home: ProcessTextScreen(initialText: _initialText),
         debugShowCheckedModeBanner: false,
       );
     }
@@ -86,47 +88,34 @@ class _MyAppState extends State<MyApp> {
 }
 
 class ProcessTextScreen extends StatefulWidget {
-  const ProcessTextScreen({Key? key}) : super(key: key);
+  final String? initialText;
+  const ProcessTextScreen({Key? key, this.initialText}) : super(key: key);
 
   @override
   State<ProcessTextScreen> createState() => _ProcessTextScreenState();
 }
 
 class _ProcessTextScreenState extends State<ProcessTextScreen> {
-  late StreamSubscription _intentDataStreamSubscription;
-
   @override
   void initState() {
     super.initState();
-
-    // For sharing text coming from outside the app while it is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.instance.getMediaStream().listen((List<SharedMediaFile> value) async {
-      if (value.isNotEmpty && value.first.type == SharedMediaType.text) {
-        final bool success = await _handleText(value.first.path);
-        if (success) {
-          SystemNavigator.pop();
-        }
-      }
-    }, onError: (err) {
-      print("getMediaStream error: ");
-    });
-
-    // For sharing text coming from outside the app while it is closed
-    ReceiveSharingIntent.instance.getInitialMedia().then((List<SharedMediaFile> value) async {
-      if (value.isNotEmpty && value.first.type == SharedMediaType.text) {
-        final bool success = await _handleText(value.first.path);
-        if (success) {
-          SystemNavigator.pop();
-        }
-      }
+    // Use a post-frame callback to ensure the widget is built before we pop.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleTextAndClose(widget.initialText);
     });
   }
 
-  @override
-  void dispose() {
-    _intentDataStreamSubscription.cancel();
-    super.dispose();
+  Future<void> _handleTextAndClose(String? text) async {
+    // If there's no text, we can just close the app.
+    if (text == null || text.isEmpty) {
+      SystemNavigator.pop();
+      return;
+    }
+
+    await _handleText(text);
+
+    // Close the invisible activity.
+    SystemNavigator.pop();
   }
 
   Future<bool> _handleText(String? text) async {
@@ -154,7 +143,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
   @override
   Widget build(BuildContext context) {
     // This screen should be invisible.
-    return const Scaffold(backgroundColor: Colors.transparent);
+    return Container(color: Colors.transparent);
   }
 }
 
