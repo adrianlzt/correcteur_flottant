@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'screens/settings_screen.dart';
@@ -61,9 +62,12 @@ class _HomePageState extends State<HomePage> {
     });
 
     // For sharing text coming from outside the app while it is closed
-    ReceiveSharingIntent.instance.getInitialMedia().then((List<SharedMediaFile> value) {
+    ReceiveSharingIntent.instance.getInitialMedia().then((List<SharedMediaFile> value) async {
       if (value.isNotEmpty && value.first.type == SharedMediaType.text) {
-        _handleText(value.first.path);
+        final bool success = await _handleText(value.first.path);
+        if (success) {
+          SystemNavigator.pop();
+        }
       }
     });
   }
@@ -74,8 +78,8 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<void> _handleText(String? text) async {
-    if (text == null || text.isEmpty) return;
+  Future<bool> _handleText(String? text) async {
+    if (text == null || text.isEmpty) return false;
 
     final bool? isPermissionGranted = await FlutterOverlayWindow.isPermissionGranted();
     if (isPermissionGranted != true) {
@@ -86,7 +90,7 @@ class _HomePageState extends State<HomePage> {
             const SnackBar(content: Text('Overlay permission is required to show corrections.')),
           );
         }
-        return;
+        return false;
       }
     }
 
@@ -97,6 +101,7 @@ class _HomePageState extends State<HomePage> {
       flag: OverlayFlag.focusPointer,
     );
     await FlutterOverlayWindow.shareData(text);
+    return true;
   }
 
   @override
