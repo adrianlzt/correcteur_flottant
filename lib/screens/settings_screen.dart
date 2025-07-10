@@ -21,6 +21,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _apiKeyController = TextEditingController();
   final _modelNameController = TextEditingController();
   LlmProvider _selectedProvider = LlmProvider.openRouter;
+  String _selectedLanguage = 'English';
   bool _isLoading = true;
   bool _isTesting = false;
 
@@ -35,11 +36,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final apiKey = await _secureStorage.getApiKey();
     final providerName = prefs.getString('llm_provider') ?? LlmProvider.openRouter.name;
     final modelName = prefs.getString('llm_model_name') ?? '';
+    final language = prefs.getString('explanation_language') ?? 'English';
 
     setState(() {
       _apiKeyController.text = apiKey ?? '';
       _modelNameController.text = modelName;
       _selectedProvider = LlmProvider.values.firstWhere((e) => e.name == providerName);
+      _selectedLanguage = language;
       _isLoading = false;
     });
   }
@@ -49,6 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await _secureStorage.saveApiKey(_apiKeyController.text);
     await prefs.setString('llm_provider', _selectedProvider.name);
     await prefs.setString('llm_model_name', _modelNameController.text);
+    await prefs.setString('explanation_language', _selectedLanguage);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -176,6 +180,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       hintText: 'e.g., gpt-4o, claude-3-haiku-20240307',
                       border: OutlineInputBorder(),
                     ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text('Explanation Language', style: TextStyle(fontWeight: FontWeight.bold)),
+                  DropdownButton<String>(
+                    value: _selectedLanguage,
+                    isExpanded: true,
+                    items: <String>['English', 'French'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedLanguage = newValue;
+                        });
+                      }
+                    },
                   ),
                   const SizedBox(height: 32),
                   Row(
