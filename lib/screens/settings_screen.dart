@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api/anthropic_adapter.dart';
+import '../api/gemini_adapter.dart';
+import '../api/llm_api_adapter.dart';
+import '../api/openai_adapter.dart';
+import '../api/openrouter_adapter.dart';
 import '../services/llm_service.dart';
 import '../services/secure_storage_service.dart';
 
@@ -16,6 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _modelNameController = TextEditingController();
   LlmProvider _selectedProvider = LlmProvider.openRouter;
   bool _isLoading = true;
+  bool _isTesting = false;
 
   @override
   void initState() {
@@ -47,6 +54,76 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Settings saved successfully!')),
       );
+    }
+  }
+
+  // This is a duplication of the private method in LlmService.
+  // Consider refactoring LlmService to expose this if it's needed elsewhere.
+  LlmApiAdapter _getAdapter(LlmProvider provider) {
+    switch (provider) {
+      case LlmProvider.openAI:
+        return OpenAiAdapter();
+      case LlmProvider.gemini:
+        return GeminiApiAdapter();
+      case LlmProvider.anthropic:
+        return AnthropicApiAdapter();
+      case LlmProvider.openRouter:
+        return OpenRouterAdapter();
+    }
+  }
+
+  Future<void> _testSettings() async {
+    if (_isTesting) return;
+
+    setState(() {
+      _isTesting = true;
+    });
+
+    try {
+      final apiKey = _apiKeyController.text;
+
+      if (apiKey.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('API Key is required for testing.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      final adapter = _getAdapter(_selectedProvider);
+      final modelName = _modelNameController.text;
+
+      try {
+        // Using a simple text to check for correction
+        await adapter.getCorrection('test', apiKey, modelName);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Connection successful!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Connection failed: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isTesting = false;
+        });
+      }
     }
   }
 
@@ -101,12 +178,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _saveSettings,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    ),
-                    child: const Text('Save Settings'),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _saveSettings,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          ),
+                          child: const Text('Save Settings'),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _isTesting ? null : _testSettings,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          ),
+                          child: _isTesting
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text('Test'),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
