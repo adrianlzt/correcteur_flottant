@@ -6,7 +6,7 @@ import 'system_prompt.dart';
 
 class GeminiApiAdapter implements LlmApiAdapter {
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName, {String? language}) async {
     final model = modelName != null && modelName.isNotEmpty ? modelName : 'gemini-1.5-flash';
     final url = Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey');
 
@@ -18,7 +18,7 @@ class GeminiApiAdapter implements LlmApiAdapter {
       'contents': [
         {
           'parts': [
-            {'text': systemPrompt},
+            {'text': getSystemPrompt(language: language ?? 'English')},
             {'text': text}
           ]
         }

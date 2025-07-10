@@ -6,7 +6,7 @@ import 'system_prompt.dart';
 
 class OpenRouterApiAdapter implements LlmApiAdapter {
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName, {String? language}) async {
     final url = Uri.parse('https://openrouter.ai/api/v1/chat/completions');
     final headers = {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
     final body = jsonEncode({
       'model': modelName != null && modelName.isNotEmpty ? modelName : 'deepseek/deepseek-r1-0528-qwen3-8b:free',
       'messages': [
-        {'role': 'system', 'content': systemPrompt},
+        {'role': 'system', 'content': getSystemPrompt(language: language ?? 'English')},
         {'role': 'user', 'content': text},
       ],
       'temperature': 0.2,

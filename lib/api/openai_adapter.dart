@@ -6,7 +6,7 @@ import 'system_prompt.dart';
 
 class OpenAiApiAdapter implements LlmApiAdapter {
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName, {String? language}) async {
     final url = Uri.parse('https://api.openai.com/v1/chat/completions');
     final headers = {
       'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ class OpenAiApiAdapter implements LlmApiAdapter {
     final body = jsonEncode({
       'model': modelName != null && modelName.isNotEmpty ? modelName : 'gpt-4o',
       'messages': [
-        {'role': 'system', 'content': systemPrompt},
+        {'role': 'system', 'content': getSystemPrompt(language: language ?? 'English')},
         {'role': 'user', 'content': text},
       ],
       'temperature': 0.2,

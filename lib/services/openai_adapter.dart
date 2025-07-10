@@ -8,7 +8,7 @@ class OpenAiAdapter implements LlmApiAdapter {
   final String _apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName, {String? language}) async {
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $apiKey',
@@ -17,7 +17,7 @@ class OpenAiAdapter implements LlmApiAdapter {
     final body = jsonEncode({
       'model': modelName != null && modelName.isNotEmpty ? modelName : 'gpt-4o',
       'messages': [
-        {'role': 'system', 'content': systemPrompt},
+        {'role': 'system', 'content': getSystemPrompt(language: language ?? 'English')},
         {'role': 'user', 'content': text},
       ],
     });

@@ -66,13 +66,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   LlmApiAdapter _getAdapter(LlmProvider provider) {
     switch (provider) {
       case LlmProvider.openAI:
-        return OpenAiAdapter();
+        return OpenAiApiAdapter();
       case LlmProvider.gemini:
         return GeminiApiAdapter();
       case LlmProvider.anthropic:
         return AnthropicApiAdapter();
       case LlmProvider.openRouter:
-        return OpenRouterAdapter();
+        return OpenRouterApiAdapter();
     }
   }
 
@@ -103,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       try {
         // Using a simple text to check for correction
-        await adapter.getCorrection('test', apiKey, modelName);
+        await adapter.getCorrection('test', apiKey, modelName, language: _selectedLanguage);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

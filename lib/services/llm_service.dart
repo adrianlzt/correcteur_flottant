@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api/anthropic_adapter.dart';
 import '../api/gemini_adapter.dart';
 import '../api/llm_api_adapter.dart';
-import 'openai_adapter.dart';
+import '../api/openai_adapter.dart';
 import '../api/openrouter_adapter.dart';
 import '../models/llm_response.dart';
 import 'secure_storage_service.dart';
@@ -15,14 +15,13 @@ class LlmService {
   LlmApiAdapter _getAdapter(LlmProvider provider) {
     switch (provider) {
       case LlmProvider.openAI:
-        return OpenAiAdapter();
+        return OpenAiApiAdapter();
       case LlmProvider.gemini:
         return GeminiApiAdapter();
       case LlmProvider.anthropic:
         return AnthropicApiAdapter();
       case LlmProvider.openRouter:
         return OpenRouterApiAdapter();
-
     }
   }
 
@@ -31,6 +30,7 @@ class LlmService {
     final apiKey = await _secureStorageService.getApiKey();
     final providerName = prefs.getString('llm_provider') ?? LlmProvider.openRouter.name;
     final modelName = prefs.getString('llm_model_name');
+    final language = prefs.getString('explanation_language') ?? 'English';
 
     if (apiKey == null || apiKey.isEmpty) {
       throw Exception('API Key not found. Please set it in the settings.');
@@ -39,6 +39,6 @@ class LlmService {
     final provider = LlmProvider.values.firstWhere((e) => e.name == providerName);
     final adapter = _getAdapter(provider);
 
-    return await adapter.getCorrection(text, apiKey, modelName);
+    return await adapter.getCorrection(text, apiKey, modelName, language: language);
   }
 }

@@ -6,7 +6,7 @@ import 'system_prompt.dart';
 
 class AnthropicApiAdapter implements LlmApiAdapter {
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName, {String? language}) async {
     final url = Uri.parse('https://api.anthropic.com/v1/messages');
     final headers = {
       'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ class AnthropicApiAdapter implements LlmApiAdapter {
     final body = jsonEncode({
       'model': modelName != null && modelName.isNotEmpty ? modelName : 'claude-3-haiku-20240307',
       'max_tokens': 2048,
-      'system': systemPrompt,
+      'system': getSystemPrompt(language: language ?? 'English'),
       'messages': [
         {'role': 'user', 'content': text},
       ],
