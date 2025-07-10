@@ -6,7 +6,7 @@ import '../services/llm_service.dart';
 
 class CorrectionOverlay extends StatefulWidget {
   final String text;
-  const CorrectionOverlay({Key? key, required this.text}) : super(key: key);
+  const CorrectionOverlay({super.key, required this.text});
 
   @override
   State<CorrectionOverlay> createState() => _CorrectionOverlayState();
