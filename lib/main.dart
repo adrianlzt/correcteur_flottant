@@ -25,7 +25,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
 
 class ProcessTextScreen extends StatefulWidget {
   final String? initialText;
-  const ProcessTextScreen({Key? key, this.initialText}) : super(key: key);
+  const ProcessTextScreen({super.key, this.initialText});
 
   @override
   State<ProcessTextScreen> createState() => _ProcessTextScreenState();
@@ -152,7 +152,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
