@@ -1,12 +1,12 @@
 # Correcteur Flottant
 
-Correcteur Flottant is a floating corrector app for Android. It allows you to select text in any application and get it corrected for grammar, spelling, and style using powerful Large Language Models (LLMs). The correction appears in a floating overlay, making it easy to review and use.
+Correcteur Flottant is a floating corrector app for Android. It allows you to select text in any application (or share it with the app) and get it corrected for grammar, spelling, and style using powerful Large Language Models (LLMs). The correction appears in a floating overlay, making it easy to review and use.
 
 <p align="center"><img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="App Icon" width="128"/></p>
 
 ## Features
 
-- Corrects text from any app using Android's native text selection menu.
+- Corrects text from any app using Android's native text selection menu or the share action.
 - Displays corrections and explanations in a convenient floating overlay.
 - Supports multiple LLM providers:
   - OpenAI (e.g., GPT-4o, GPT-3.5-turbo)
@@ -43,9 +43,10 @@ After installing the app:
 5.  (Optional) Set the **Explanation Language**.
 6.  Save your settings.
 7.  Now, go to any other app (e.g., a messaging app, a browser, a note-taking app).
-8.  Select some text you want to correct.
-9.  In the context menu that appears, tap the three dots (overflow menu) and find **Correcteur Flottant**.
-10. The app will launch a floating window with the corrected text and explanations.
+8.  There are two ways to get your text corrected:
+    -   **Using the text selection menu:** Select the text, tap the three dots (overflow menu) in the context menu, and choose **Correcteur Flottant**.
+    -   **Using the share menu:** Select the text, tap "Share", and choose **Correcteur Flottant** from the app list.
+9.  The app will launch a floating window with the corrected text and explanations.
 
 ## For Developers
 
