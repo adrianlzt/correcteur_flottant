@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     final apiKey = await _secureStorage.getApiKey();
     final providerName = prefs.getString('llm_provider') ?? LlmProvider.openRouter.name;
-    final modelName = prefs.getString('llm_model_name') ?? '';
+    final modelName = prefs.getString('llm_model_name') ?? 'deepseek/deepseek-r1-0528-qwen3-8b:free';
     final language = prefs.getString('explanation_language') ?? 'English';
 
     setState(() {
@@ -214,7 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   TextField(
                     controller: _modelNameController,
                     decoration: const InputDecoration(
-                      hintText: 'e.g., gpt-4o, claude-3-haiku-20240307',
+                      hintText: 'deepseek/deepseek-r1-0528-qwen3-8b:free',
                       border: OutlineInputBorder(),
                     ),
                   ),
