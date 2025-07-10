@@ -1,4 +1,4 @@
-package com.example.correcteur_flottant
+package com.adrianlzt.correcteurflottant
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.example.correcteur_flottant/intent"
+    private val CHANNEL = "com.adrianlzt.correcteurflottant/intent"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (intent.action == Intent.ACTION_PROCESS_TEXT) {

@@ -19,7 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const platform = MethodChannel('com.example.correcteur_flottant/intent');
+  static const platform = MethodChannel('com.adrianlzt.correcteurflottant/intent');
   String? _launchAction;
   String? _initialText;
   bool _isChecking = true;
