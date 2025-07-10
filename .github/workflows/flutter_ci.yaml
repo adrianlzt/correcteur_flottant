@@ -27,11 +27,17 @@ jobs:
 
 
 
+      - name: Create keystore file
+        run: echo "${{ secrets.STORE_FILE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
+        shell: bash
+
+      - name: Create key.properties
+        run: |
+          echo "storeFile=upload-keystore.jks" > android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+        shell: bash
+
       - name: Build Android (Release)
         run: flutter build apk --release
-
-      - name: Build iOS (Release)
-        run: flutter build ios --no-codesign --release
-
-      - name: Build Web (Release)
-        run: flutter build web --release
