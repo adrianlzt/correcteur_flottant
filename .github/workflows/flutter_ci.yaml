@@ -31,10 +31,12 @@ jobs:
         run: flutter analyze
 
       - name: Create keystore file
+        if: startsWith(github.ref, 'refs/tags/')
         run: echo "${{ secrets.STORE_FILE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
         shell: bash
 
       - name: Create key.properties
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "storeFile=upload-keystore.jks" > android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
@@ -43,6 +45,7 @@ jobs:
         shell: bash
 
       - name: Build Android (Release)
+        if: startsWith(github.ref, 'refs/tags/')
         run: flutter build apk --release
 
       - name: Rename APK
