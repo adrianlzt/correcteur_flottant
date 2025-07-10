@@ -1,0 +1,38 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x' # Use a specific Flutter version or '3.x' for the latest stable 3.x
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build Android (Release)
+        run: flutter build apk --release
+
+      - name: Build iOS (Release)
+        run: flutter build ios --no-codesign --release
+
+      - name: Build Web (Release)
+        run: flutter build web --release
