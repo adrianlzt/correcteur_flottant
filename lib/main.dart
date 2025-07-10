@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Select any French text in another app and choose "Correcteur Flottant" from the menu.',
+                'Select any text in another app and choose "Correcteur Flottant" from the menu.',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
