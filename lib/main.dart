@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'screens/settings_screen.dart';
 import 'widgets/correction_overlay.dart';
