@@ -2,6 +2,8 @@
 
 Correcteur Flottant is a floating corrector app for Android. It allows you to select text in any application and get it corrected for grammar, spelling, and style using powerful Large Language Models (LLMs). The correction appears in a floating overlay, making it easy to review and use.
 
+<p align="center"><img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="App Icon" width="128"/></p>
+
 ## Features
 
 - Corrects text from any app using Android's native text selection menu.
