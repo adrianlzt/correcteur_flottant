@@ -124,8 +124,8 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
   Future<bool> _handleText(String text) async {
     if (text.isEmpty) return false;
 
-    final bool? isPermissionGranted = await FlutterOverlayWindow.isPermissionGranted();
-    if (isPermissionGranted != true) {
+    final bool isPermissionGranted = await FlutterOverlayWindow.isPermissionGranted();
+    if (!isPermissionGranted) {
       final bool? granted = await FlutterOverlayWindow.requestPermission();
       if (granted != true) {
         debugPrint('Overlay permission is required to show corrections.');
