@@ -10,7 +10,7 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL = "com.adrianlzt.correcteurflottant/intent"
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (intent.action == Intent.ACTION_PROCESS_TEXT) {
+        if (intent.action == Intent.ACTION_PROCESS_TEXT || intent.action == Intent.ACTION_SEND) {
             setTheme(R.style.TransparentTheme)
         }
         super.onCreate(savedInstanceState)
@@ -22,10 +22,10 @@ class MainActivity : FlutterActivity() {
             call, result ->
             if (call.method == "getLaunchAction") {
                 val action = intent.action
-                val data = if (action == Intent.ACTION_PROCESS_TEXT) {
-                    intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
-                } else {
-                    null
+                val data = when (action) {
+                    Intent.ACTION_PROCESS_TEXT -> intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
+                    Intent.ACTION_SEND -> intent.getStringExtra(Intent.EXTRA_TEXT)
+                    else -> null
                 }
                 val intentData = mapOf("action" to action, "data" to data)
                 result.success(intentData)

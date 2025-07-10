@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
       );
     }
 
-    if (_launchAction == 'android.intent.action.PROCESS_TEXT') {
+    if (_launchAction == 'android.intent.action.PROCESS_TEXT' || _launchAction == 'android.intent.action.SEND') {
       return MaterialApp(
         home: ProcessTextScreen(initialText: _initialText),
         debugShowCheckedModeBanner: false,
