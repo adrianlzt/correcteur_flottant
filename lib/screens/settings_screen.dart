@@ -20,8 +20,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _secureStorage = SecureStorageService();
   final _apiKeyController = TextEditingController();
   final _modelNameController = TextEditingController();
+  final _languageController = TextEditingController();
   LlmProvider _selectedProvider = LlmProvider.openRouter;
-  String _selectedLanguage = 'English';
   bool _isLoading = true;
   bool _isTesting = false;
 
@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _apiKeyController.text = apiKey ?? '';
       _modelNameController.text = modelName;
       _selectedProvider = LlmProvider.values.firstWhere((e) => e.name == providerName);
-      _selectedLanguage = language;
+      _languageController.text = language;
       _isLoading = false;
     });
   }
@@ -52,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await _secureStorage.saveApiKey(_apiKeyController.text);
     await prefs.setString('llm_provider', _selectedProvider.name);
     await prefs.setString('llm_model_name', _modelNameController.text);
-    await prefs.setString('explanation_language', _selectedLanguage);
+    await prefs.setString('explanation_language', _languageController.text);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -103,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       try {
         // Using a simple text to check for correction
-        await adapter.getCorrection('test', apiKey, modelName, language: _selectedLanguage);
+        await adapter.getCorrection('test', apiKey, modelName, language: _languageController.text);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -183,22 +183,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 24),
                   const Text('Explanation Language', style: TextStyle(fontWeight: FontWeight.bold)),
-                  DropdownButton<String>(
-                    value: _selectedLanguage,
-                    isExpanded: true,
-                    items: <String>['English', 'French'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          _selectedLanguage = newValue;
-                        });
-                      }
-                    },
+                  TextField(
+                    controller: _languageController,
+                    decoration: const InputDecoration(
+                      hintText: 'e.g., English, French',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Row(
