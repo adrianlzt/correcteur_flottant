@@ -52,7 +52,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk
-          cp build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk build/app/outputs/flutter-apk/correcteur_flottant-latest.apk
+          cp build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk build/app/outputs/flutter-apk/correcteur_flottant.apk
         shell: bash
 
       - name: Upload Release APK
@@ -61,6 +61,6 @@ jobs:
         with:
           files: |
             build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk
-            build/app/outputs/flutter-apk/correcteur_flottant-latest.apk
+            build/app/outputs/flutter-apk/correcteur_flottant.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

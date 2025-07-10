@@ -19,7 +19,7 @@ Correcteur Flottant is a floating corrector app for Android. It allows you to se
 You can download and install the app using the APK file from the latest release.
 
 1.  **Download the latest APK:**
-    -   [**correcteur_flottant-latest.apk**](https://github.com/adrianlzt/correcteur_flottant/releases/latest/download/correcteur_flottant-latest.apk)
+    -   [**correcteur_flottant.apk**](https://github.com/adrianlzt/correcteur_flottant/releases/latest/download/correcteur_flottant.apk)
     -   Alternatively, go to the [Releases page](https://github.com/adrianlzt/correcteur_flottant/releases) to find all versions.
 
 2.  **Enable installation from unknown sources:**
