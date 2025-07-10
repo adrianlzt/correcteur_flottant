@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'screens/settings_screen.dart';
 import 'widgets/correction_overlay.dart';
 
@@ -12,7 +11,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -37,7 +36,7 @@ class _MyAppState extends State<MyApp> {
       try {
         intentData = await platform.invokeMethod('getLaunchAction');
       } on PlatformException catch (e) {
-        print("Failed to get launch action: '${e.message}'.");
+        debugPrint("Failed to get launch action: '${e.message}'.");
       }
     }
     if (mounted) {
@@ -79,7 +78,7 @@ class _MyAppState extends State<MyApp> {
 
 class ProcessTextScreen extends StatefulWidget {
   final String? initialText;
-  const ProcessTextScreen({Key? key, this.initialText}) : super(key: key);
+  const ProcessTextScreen({super.key, this.initialText});
 
   @override
   State<ProcessTextScreen> createState() => _ProcessTextScreenState();
@@ -108,7 +107,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
 
     // This screen is a semi-transparent fullscreen activity.
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.5),
+      backgroundColor: Colors.black.withAlpha(128),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -120,7 +119,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -160,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Select any French text in another app and choose \"Correcteur Flottant\" from the menu.',
+                'Select any French text in another app and choose "Correcteur Flottant" from the menu.',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
