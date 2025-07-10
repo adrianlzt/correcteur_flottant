@@ -15,7 +15,7 @@ class LlmService {
   LlmApiAdapter _getAdapter(LlmProvider provider) {
     switch (provider) {
       case LlmProvider.openAI:
-        return OpenAiApiAdapter();
+        return OpenAiAdapter();
       case LlmProvider.gemini:
         return GeminiApiAdapter();
       case LlmProvider.anthropic:
