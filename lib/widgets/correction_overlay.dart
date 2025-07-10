@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import '../models/llm_response.dart';
 import '../services/llm_service.dart';
 
 class CorrectionOverlay extends StatefulWidget {
-  const CorrectionOverlay({Key? key}) : super(key: key);
+  final String text;
+  const CorrectionOverlay({Key? key, required this.text}) : super(key: key);
 
   @override
   State<CorrectionOverlay> createState() => _CorrectionOverlayState();
@@ -19,14 +19,7 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
   @override
   void initState() {
     super.initState();
-    // Listen for data sent from the main app.
-    FlutterOverlayWindow.overlayListener.listen((data) {
-      if (data is String) {
-        setState(() {
-          _correctionFuture = _llmService.getCorrection(data);
-        });
-      }
-    });
+    _correctionFuture = _llmService.getCorrection(widget.text);
   }
 
   @override
@@ -60,7 +53,7 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
               right: 0,
               child: IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => FlutterOverlayWindow.closeOverlay(),
+                onPressed: () => SystemNavigator.pop(),
               ),
             ),
           ],
@@ -70,12 +63,6 @@ class _CorrectionOverlayState extends State<CorrectionOverlay> {
   }
 
   Widget _buildContent() {
-    if (_correctionFuture == null) {
-      return const Center(
-        child: Text('Waiting for text...'),
-      );
-    }
-
     return FutureBuilder<LlmResponse>(
       future: _correctionFuture,
       builder: (context, snapshot) {

@@ -3,21 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'screens/settings_screen.dart';
 import 'widgets/correction_overlay.dart';
-
-// Entry point for the overlay service
-@pragma("vm:entry-point")
-void overlayMain() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      backgroundColor: Colors.transparent,
-      body: CorrectionOverlay(),
-    ),
-  ));
-}
 
 // Main application entry point
 void main() {
@@ -102,52 +89,33 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
   @override
   void initState() {
     super.initState();
-    // Use a post-frame callback to ensure the widget is built before we pop.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleTextAndClose(widget.initialText);
-    });
-  }
-
-  Future<void> _handleTextAndClose(String? text) async {
-    // If there's no text, we can just close the app.
-    if (text == null || text.isEmpty) {
-      SystemNavigator.pop();
-      return;
+    if (widget.initialText == null || widget.initialText!.isEmpty) {
+      // Use a post-frame callback to pop after the first frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          SystemNavigator.pop();
+        }
+      });
     }
-
-    await _handleText(text);
-
-    // Close the invisible activity.
-    SystemNavigator.pop();
-  }
-
-  Future<bool> _handleText(String? text) async {
-    if (text == null || text.isEmpty) return false;
-
-    final bool? isPermissionGranted = await FlutterOverlayWindow.isPermissionGranted();
-    if (isPermissionGranted != true) {
-      final bool? granted = await FlutterOverlayWindow.requestPermission();
-      if (granted != true) {
-        print('Overlay permission is required to show corrections.');
-        return false;
-      }
-    }
-
-    await FlutterOverlayWindow.showOverlay(
-      height: 600,
-      width: -1, // FlutterOverlayWindow.matchParent
-      alignment: OverlayAlignment.center,
-      flag: OverlayFlag.focusPointer,
-      enableDrag: false,
-    );
-    await FlutterOverlayWindow.shareData(text);
-    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    // This screen should be invisible.
-    return Container(color: Colors.transparent);
+    if (widget.initialText == null || widget.initialText!.isEmpty) {
+      // Show nothing while we prepare to pop.
+      return Container(color: Colors.transparent);
+    }
+
+    // This screen is a semi-transparent fullscreen activity.
+    return Scaffold(
+      backgroundColor: Colors.black.withOpacity(0.5),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CorrectionOverlay(text: widget.initialText!),
+        ),
+      ),
+    );
   }
 }
 
