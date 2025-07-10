@@ -22,8 +22,7 @@ class LlmService {
         return AnthropicApiAdapter();
       case LlmProvider.openRouter:
         return OpenRouterApiAdapter();
-      default:
-        throw Exception('Unsupported LLM provider');
+
     }
   }
 
