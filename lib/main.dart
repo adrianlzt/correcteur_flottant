@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
 
     if (_launchAction == 'android.intent.action.PROCESS_TEXT') {
       return MaterialApp(
-        home: ProcessTextScreen(initialText: _initialText),
+        home: ProcessTextScreen(initialText: _initialText ?? ''),
         debugShowCheckedModeBanner: false,
       );
     }
@@ -91,8 +91,8 @@ class _MyAppState extends State<MyApp> {
 }
 
 class ProcessTextScreen extends StatefulWidget {
-  final String? initialText;
-  const ProcessTextScreen({super.key, this.initialText});
+  final String initialText;
+  const ProcessTextScreen({super.key, required this.initialText});
 
   @override
   State<ProcessTextScreen> createState() => _ProcessTextScreenState();
@@ -108,9 +108,9 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
     });
   }
 
-  Future<void> _handleTextAndClose(String? text) async {
+  Future<void> _handleTextAndClose(String text) async {
     // If there's no text, we can just close the app.
-    if (text == null || text.isEmpty) {
+    if (text.isEmpty) {
       SystemNavigator.pop();
       return;
     }
@@ -121,8 +121,8 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
     SystemNavigator.pop();
   }
 
-  Future<bool> _handleText(String? text) async {
-    if (text == null || text.isEmpty) return false;
+  Future<bool> _handleText(String text) async {
+    if (text.isEmpty) return false;
 
     final bool? isPermissionGranted = await FlutterOverlayWindow.isPermissionGranted();
     if (isPermissionGranted != true) {
