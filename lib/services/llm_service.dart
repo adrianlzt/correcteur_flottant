@@ -29,7 +29,7 @@ class LlmService {
   Future<LlmResponse> getCorrection(String text) async {
     final prefs = await SharedPreferences.getInstance();
     final apiKey = await _secureStorageService.getApiKey();
-    final providerName = prefs.getString('llm_provider') ?? LlmProvider.openAI.name;
+    final providerName = prefs.getString('llm_provider') ?? LlmProvider.openRouter.name;
     final modelName = prefs.getString('llm_model_name');
 
     if (apiKey == null || apiKey.isEmpty) {

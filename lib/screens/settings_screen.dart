@@ -14,7 +14,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _secureStorage = SecureStorageService();
   final _apiKeyController = TextEditingController();
   final _modelNameController = TextEditingController();
-  LlmProvider _selectedProvider = LlmProvider.openAI;
+  LlmProvider _selectedProvider = LlmProvider.openRouter;
   bool _isLoading = true;
 
   @override
@@ -26,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final apiKey = await _secureStorage.getApiKey();
-    final providerName = prefs.getString('llm_provider') ?? LlmProvider.openAI.name;
+    final providerName = prefs.getString('llm_provider') ?? LlmProvider.openRouter.name;
     final modelName = prefs.getString('llm_model_name') ?? '';
 
     setState(() {

@@ -29,7 +29,7 @@ class OpenRouterApiAdapter implements LlmApiAdapter {
       'X-Title': 'Correcteur Flottant', // Recommended by OpenRouter
     };
     final body = jsonEncode({
-      'model': modelName != null && modelName.isNotEmpty ? modelName : 'openai/gpt-4o',
+      'model': modelName != null && modelName.isNotEmpty ? modelName : 'deepseek/deepseek-r1-0528-qwen3-8b:free',
       'messages': [
         {'role': 'system', 'content': _systemPrompt},
         {'role': 'user', 'content': text},
