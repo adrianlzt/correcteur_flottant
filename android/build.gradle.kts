@@ -4,16 +4,16 @@ allprojects {
         mavenCentral()
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).configureEach {
-        kotlinOptions {
-            jvmTarget = "17"
-        }
-    }
-
-    tasks.withType(org.gradle.api.tasks.compile.JavaCompile::class).configureEach {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-    }
+    // tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).configureEach {
+    //     kotlinOptions {
+    //         jvmTarget = "1.8"
+    //     }
+    // }
+    //
+    // tasks.withType(org.gradle.api.tasks.compile.JavaCompile::class).configureEach {
+    //     sourceCompatibility = "11"
+    //     targetCompatibility = "11"
+    // }
 }
 
 val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
