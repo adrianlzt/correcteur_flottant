@@ -107,7 +107,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
 
     // This screen is a semi-transparent fullscreen activity.
     return Scaffold(
-      backgroundColor: Colors.black.withAlpha(128),
+      backgroundColor: Colors.transparent,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
