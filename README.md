@@ -4,6 +4,10 @@ Correcteur Flottant is a floating corrector app for Android. It allows you to se
 
 <p align="center"><img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="App Icon" width="128"/></p>
 
+## Demo
+
+https://github.com/user-attachments/assets/75baa432-70c0-42bd-8d7e-9f04aa3688b4
+
 ## Features
 
 - Corrects text from any app using Android's native text selection menu or the share action.
