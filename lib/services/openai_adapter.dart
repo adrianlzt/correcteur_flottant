@@ -1,22 +1,38 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../api/llm_api_adapter.dart';
 import '../models/llm_response.dart';
-import 'llm_service.dart'; // For the systemPrompt constant and abstract class
 
 class OpenAiAdapter implements LlmApiAdapter {
   final String _apiUrl = 'https://api.openai.com/v1/chat/completions';
+  final String _systemPrompt = '''
+You are an expert French language tutor. Your task is to analyze the user's French text. You MUST respond with a JSON object. Do not add any text before or after the JSON object.
+
+The JSON object must have this exact structure:
+{
+  "correctedText": "The fully corrected, natural-sounding French text.",
+  "errors": [
+    {
+      "type": "A brief category of the error (e.g., 'Accord de genre', 'Conjugaison', 'Préposition', 'Vocabulaire', 'Ordre des mots', 'Article', 'Pronom', 'Autre').",
+      "original": "The specific incorrect part of the text.",
+      "corrected": "The corrected version of that part.",
+      "explanation": "A clear and simple explanation of the error and the correction, in French."
+    }
+  ]
+}
+''';
 
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, {String? model}) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $apiKey',
     };
 
     final body = jsonEncode({
-      'model': model ?? 'gpt-4o', // Default to gpt-4o if no model is specified
+      'model': modelName != null && modelName.isNotEmpty ? modelName : 'gpt-4o',
       'messages': [
-        {'role': 'system', 'content': systemPrompt},
+        {'role': 'system', 'content': _systemPrompt},
         {'role': 'user', 'content': text},
       ],
       'response_format': { 'type': 'json_object' }
