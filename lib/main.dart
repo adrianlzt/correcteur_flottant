@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
       try {
         intentData = await platform.invokeMethod('getLaunchAction');
       } on PlatformException catch (e) {
-        print("Failed to get launch action: '${e.message}'.");
+        debugPrint("Failed to get launch action: '${e.message}'.");
       }
     }
     if (mounted) {
@@ -128,7 +128,7 @@ class _ProcessTextScreenState extends State<ProcessTextScreen> {
     if (isPermissionGranted != true) {
       final bool? granted = await FlutterOverlayWindow.requestPermission();
       if (granted != true) {
-        print('Overlay permission is required to show corrections.');
+        debugPrint('Overlay permission is required to show corrections.');
         return false;
       }
     }
