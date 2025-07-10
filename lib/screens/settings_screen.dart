@@ -131,6 +131,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  void _showOpenRouterHelpDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('How to get an OpenRouter.ai API Key'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('1. Go to https://openrouter.ai'),
+                Text('2. Log in or create an account.'),
+                Text('3. Navigate to your account settings to find the "Keys" page.'),
+                Text('4. Click "Create Key" to generate a new API key.'),
+                Text('5. Copy the key and paste it here.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,9 +197,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   TextField(
                     controller: _apiKeyController,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Enter your API Key',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
+                      suffixIcon: _selectedProvider == LlmProvider.openRouter
+                          ? IconButton(
+                              icon: const Icon(Icons.help_outline),
+                              onPressed: _showOpenRouterHelpDialog,
+                              tooltip: 'How to get an OpenRouter.ai API key',
+                            )
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 24),
