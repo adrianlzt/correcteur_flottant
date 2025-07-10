@@ -48,15 +48,19 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: flutter build apk --release
 
-      - name: Rename APK
+      - name: Prepare release assets
         if: startsWith(github.ref, 'refs/tags/')
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk
+          cp build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk build/app/outputs/flutter-apk/correcteur_flottant-latest.apk
         shell: bash
 
       - name: Upload Release APK
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk
+          files: |
+            build/app/outputs/flutter-apk/correcteur_flottant-${{ github.ref_name }}.apk
+            build/app/outputs/flutter-apk/correcteur_flottant-latest.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
