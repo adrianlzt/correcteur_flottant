@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../api/llm_api_adapter.dart';
 import '../models/llm_response.dart';
-import 'llm_service.dart'; // For the systemPrompt constant and abstract class
 
 class OpenAiAdapter implements LlmApiAdapter {
   final String _apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -23,14 +23,14 @@ The JSON object must have this exact structure:
 ''';
 
   @override
-  Future<LlmResponse> getCorrection(String text, String apiKey, {String? model}) async {
+  Future<LlmResponse> getCorrection(String text, String apiKey, String? modelName) async {
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $apiKey',
     };
 
     final body = jsonEncode({
-      'model': model ?? 'gpt-4o', // Default to gpt-4o if no model is specified
+      'model': modelName != null && modelName.isNotEmpty ? modelName : 'gpt-4o',
       'messages': [
         {'role': 'system', 'content': _systemPrompt},
         {'role': 'user', 'content': text},

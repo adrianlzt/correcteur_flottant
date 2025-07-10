@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api/anthropic_adapter.dart';
 import '../api/gemini_adapter.dart';
 import '../api/llm_api_adapter.dart';
-import '../api/openai_adapter.dart';
+import 'openai_adapter.dart';
 import '../api/openrouter_adapter.dart';
 import '../models/llm_response.dart';
 import 'secure_storage_service.dart';
